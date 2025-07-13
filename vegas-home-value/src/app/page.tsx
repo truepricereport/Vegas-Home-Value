@@ -1,103 +1,478 @@
-import Image from "next/image";
+'use client'
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import GoogleMap from "@/components/GoogleMap"
+import { Menu } from "lucide-react"
+
+interface FormData {
+  // Step 1
+  streetAddress: string
+  unitNumber: string
+  city: string
+  state: string
+  country: string
+  zipcode: string
+  // Step 2
+  beds: string
+  baths: string
+  // Step 3
+  firstName: string
+  lastName: string
+  phone: string
+  email: string
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [currentStep, setCurrentStep] = useState(1)
+  const [formData, setFormData] = useState<FormData>({
+    streetAddress: '',
+    unitNumber: '',
+    city: '',
+    state: '',
+    country: '',
+    zipcode: '',
+    beds: '',
+    baths: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+  })
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const updateFormData = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const nextStep = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+
+    // Create URL parameters for the results page
+    const params = new URLSearchParams({
+      first_name: formData.firstName,
+      address: formData.streetAddress + (formData.unitNumber ? ` ${formData.unitNumber}` : ''),
+      city: formData.city,
+      state: formData.state,
+      zipcode: formData.zipcode,
+      beds: formData.beds,
+      baths: formData.baths,
+      email: formData.email,
+      phone: formData.phone
+    })
+
+    // Redirect to results page
+    window.location.href = `/results?${params.toString()}`
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-white border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          {/* Logo */}
+          <div className="flex items-center">
+            <img
+              src="https://ext.same-assets.com/2983890396/1545589317.png"
+              alt="True Price Report"
+              className="h-12"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+
+          {/* Main Menu Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">
+                Main Menu
+                <Menu className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Find Value</DropdownMenuItem>
+              <DropdownMenuItem>Disclosure</DropdownMenuItem>
+              <DropdownMenuItem>Privacy Policy</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="bg-gray-300 min-h-screen py-12">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <Card className="bg-white shadow-lg">
+            <CardContent className="p-8">
+              {/* True Price Report Logo in content */}
+              <div className="text-center mb-8">
+                <img
+                  src="https://ext.same-assets.com/2983890396/1545589317.png"
+                  alt="True Price Report"
+                  className="h-16 mx-auto mb-6"
+                />
+              </div>
+
+              {/* Main Heading */}
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+                  This is Your Home, Correct?
+                </h1>
+                <h2 className="text-xl text-green-600 font-medium">
+                  2159-2111 Point Mallard Dr
+                </h2>
+              </div>
+
+              {/* Google Maps Section */}
+              <div className="mb-8">
+                <div className="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
+                  <GoogleMap />
+                </div>
+              </div>
+
+              {/* Multi-Step Form */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Step 1: Confirm Address */}
+                {currentStep === 1 && (
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                      Step 1: Confirm Address
+                    </h2>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="street_address" className="block text-sm font-medium text-gray-700 mb-1">
+                          Street Address
+                        </label>
+                        <Input
+                          id="street_address"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter street address"
+                          value={formData.streetAddress}
+                          onChange={(e) => updateFormData('streetAddress', e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="unit_number" className="block text-sm font-medium text-gray-700 mb-1">
+                          Unit Number
+                        </label>
+                        <Input
+                          id="unit_number"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter unit number"
+                          value={formData.unitNumber}
+                          onChange={(e) => updateFormData('unitNumber', e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                          City
+                        </label>
+                        <Input
+                          id="city"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter city"
+                          value={formData.city}
+                          onChange={(e) => updateFormData('city', e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
+                          State
+                        </label>
+                        <Input
+                          id="state"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter state"
+                          value={formData.state}
+                          onChange={(e) => updateFormData('state', e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
+                          Country
+                        </label>
+                        <Input
+                          id="country"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter country"
+                          value={formData.country}
+                          onChange={(e) => updateFormData('country', e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="zipcode" className="block text-sm font-medium text-gray-700 mb-1">
+                          Zipcode
+                        </label>
+                        <Input
+                          id="zipcode"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter zipcode"
+                          value={formData.zipcode}
+                          onChange={(e) => updateFormData('zipcode', e.target.value)}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-8">
+                      <Button
+                        type="button"
+                        onClick={nextStep}
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 2: Home Basics */}
+                {currentStep === 2 && (
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                      Step 2: Home Basics
+                    </h2>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="beds" className="block text-sm font-medium text-gray-700 mb-1">
+                          Beds
+                        </label>
+                        <Select value={formData.beds} onValueChange={(value) => updateFormData('beds', value)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select number of beds" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="4">4</SelectItem>
+                            <SelectItem value="5">5</SelectItem>
+                            <SelectItem value="6">6</SelectItem>
+                            <SelectItem value="7">7</SelectItem>
+                            <SelectItem value="8">8</SelectItem>
+                            <SelectItem value="9+">9+</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <label htmlFor="baths" className="block text-sm font-medium text-gray-700 mb-1">
+                          Baths
+                        </label>
+                        <Select value={formData.baths} onValueChange={(value) => updateFormData('baths', value)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select number of baths" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="1.5">1.5</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="2.5">2.5</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="3.5">3.5</SelectItem>
+                            <SelectItem value="4">4</SelectItem>
+                            <SelectItem value="4.5">4.5</SelectItem>
+                            <SelectItem value="6">6</SelectItem>
+                            <SelectItem value="6.5">6.5</SelectItem>
+                            <SelectItem value="7">7</SelectItem>
+                            <SelectItem value="7.5">7.5</SelectItem>
+                            <SelectItem value="8">8</SelectItem>
+                            <SelectItem value="8.5">8.5</SelectItem>
+                            <SelectItem value="9+">9+</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="mt-8 flex gap-4">
+                      <Button
+                        type="button"
+                        onClick={prevStep}
+                        variant="outline"
+                        className="px-8 py-2"
+                      >
+                        Previous
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={nextStep}
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Confirm Your Information */}
+                {currentStep === 3 && (
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                      Step 3: Confirm Your Information
+                    </h2>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">
+                          First Name
+                        </label>
+                        <Input
+                          id="first_name"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter first name"
+                          value={formData.firstName}
+                          onChange={(e) => updateFormData('firstName', e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">
+                          Last Name
+                        </label>
+                        <Input
+                          id="last_name"
+                          type="text"
+                          className="w-full"
+                          placeholder="Enter last name"
+                          value={formData.lastName}
+                          onChange={(e) => updateFormData('lastName', e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                          Phone
+                        </label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          className="w-full"
+                          placeholder="Enter phone number"
+                          value={formData.phone}
+                          onChange={(e) => updateFormData('phone', e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                          Email
+                        </label>
+                        <Input
+                          id="email"
+                          type="email"
+                          className="w-full"
+                          placeholder="Enter email address"
+                          value={formData.email}
+                          onChange={(e) => updateFormData('email', e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-8 flex gap-4">
+                      <Button
+                        type="button"
+                        onClick={prevStep}
+                        variant="outline"
+                        className="px-8 py-2"
+                      >
+                        Previous
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded"
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </form>
+
+              {/* Disclaimer - Show on all steps */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  By submitting my information in this form, I agree to be contacted by licensed providers.
+                  I also agree to be contacted via call or text manual and/or automatic to my cell phone provided,
+                  in order to receive the information requested above.
+                </p>
+                <p className="text-sm text-gray-600 leading-relaxed mt-3">
+                  Upon submission of your information, you will be directed to a home value report sponsored by a
+                  Nevada based licensed Sponsor of TruePriceReport to obtain feedback, verify accuracy, answer
+                  specific questions related to the report. If you are not based in Nevada or researching Real Estate
+                  out of Nevada you may request a local Licensee when contacted. You may opt out of contact at any time.
+                  The report is generated using several data aggregators of public information and cannot be guaranteed
+                  to be accurate, which is why we will call to correct if you feel price is inaccurate, however the
+                  automatic price should not be relied upon for making any financial decisions.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-6">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-wrap items-center gap-4 mb-4 md:mb-0">
+              <span className="text-white">True Price Report</span>
+              <a href="#" className="text-gray-300 hover:text-white">Privacy Policy</a>
+              <a href="#" className="text-gray-300 hover:text-white">Disclosure</a>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <span className="text-gray-300">Powered By:</span>
+              <div className="flex items-center gap-2">
+                <img
+                  src="https://ext.same-assets.com/2983890396/2120930438.png"
+                  alt="MLS"
+                  className="h-10 w-auto"
+                />
+                <img
+                  src="https://ext.same-assets.com/2983890396/59346948.png"
+                  alt="Realtor"
+                  className="h-10 w-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
-  );
+  )
 }
