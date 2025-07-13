@@ -87,10 +87,10 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-green-50 to-gray-200">
       {/* Header */}
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="bg-white/80 border-b shadow-sm sticky top-0 z-10 backdrop-blur-md">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center max-w-4xl">
           {/* Logo */}
           <div className="flex items-center">
             <img
@@ -118,32 +118,32 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="bg-gray-300 min-h-screen py-12">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <Card className="bg-white shadow-lg">
-            <CardContent className="p-8">
+      <main className="flex-1 flex items-center justify-center py-8 px-2">
+        <div className="w-full max-w-lg mx-auto">
+          <Card className="bg-white/90 shadow-2xl rounded-2xl border border-gray-200">
+            <CardContent className="p-6 sm:p-8">
               {/* True Price Report Logo in content */}
-              <div className="text-center mb-8">
+              <div className="flex flex-col items-center mb-8">
                 <img
                   src="https://ext.same-assets.com/2983890396/1545589317.png"
                   alt="True Price Report"
-                  className="h-16 mx-auto mb-6"
+                  className="h-16 w-auto mb-4 drop-shadow-lg"
                 />
               </div>
 
               {/* Main Heading */}
               <div className="text-center mb-8">
-                <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                   This is Your Home, Correct?
                 </h1>
-                <h2 className="text-xl text-green-600 font-medium">
+                <h2 className="text-lg sm:text-xl text-green-600 font-semibold">
                   2159-2111 Point Mallard Dr
                 </h2>
               </div>
 
               {/* Google Maps Section */}
               <div className="mb-8">
-                <div className="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
+                <div className="w-full h-48 sm:h-64 bg-gray-200 rounded-lg overflow-hidden border border-gray-300">
                   <GoogleMap />
                 </div>
               </div>
@@ -243,11 +243,11 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-8 flex justify-end">
                       <Button
                         type="button"
                         onClick={nextStep}
-                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded"
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded w-full sm:w-auto"
                       >
                         Next
                       </Button>
@@ -314,19 +314,19 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="mt-8 flex gap-4">
+                    <div className="mt-8 flex flex-col sm:flex-row gap-4">
                       <Button
                         type="button"
                         onClick={prevStep}
                         variant="outline"
-                        className="px-8 py-2"
+                        className="px-8 py-2 w-full sm:w-auto"
                       >
                         Previous
                       </Button>
                       <Button
                         type="button"
                         onClick={nextStep}
-                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded"
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded w-full sm:w-auto"
                       >
                         Next
                       </Button>
@@ -403,18 +403,18 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="mt-8 flex gap-4">
+                    <div className="mt-8 flex flex-col sm:flex-row gap-4">
                       <Button
                         type="button"
                         onClick={prevStep}
                         variant="outline"
-                        className="px-8 py-2"
+                        className="px-8 py-2 w-full sm:w-auto"
                       >
                         Previous
                       </Button>
                       <Button
                         type="submit"
-                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded"
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded w-full sm:w-auto"
                       >
                         Submit
                       </Button>
@@ -425,12 +425,12 @@ export default function Home() {
 
               {/* Disclaimer - Show on all steps */}
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   By submitting my information in this form, I agree to be contacted by licensed providers.
                   I also agree to be contacted via call or text manual and/or automatic to my cell phone provided,
                   in order to receive the information requested above.
                 </p>
-                <p className="text-sm text-gray-600 leading-relaxed mt-3">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mt-3">
                   Upon submission of your information, you will be directed to a home value report sponsored by a
                   Nevada based licensed Sponsor of TruePriceReport to obtain feedback, verify accuracy, answer
                   specific questions related to the report. If you are not based in Nevada or researching Real Estate
@@ -446,27 +446,26 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6">
-        <div className="container mx-auto px-4">
+      <footer className="bg-gray-800 text-white py-6 mt-8">
+        <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-wrap items-center gap-4 mb-4 md:mb-0">
-              <span className="text-white">True Price Report</span>
-              <a href="#" className="text-gray-300 hover:text-white">Privacy Policy</a>
-              <a href="#" className="text-gray-300 hover:text-white">Disclosure</a>
+              <span className="text-white font-semibold">True Price Report</span>
+              <a href="#" className="text-gray-300 hover:text-white transition">Privacy Policy</a>
+              <a href="#" className="text-gray-300 hover:text-white transition">Disclosure</a>
             </div>
-
             <div className="flex items-center gap-4">
               <span className="text-gray-300">Powered By:</span>
               <div className="flex items-center gap-2">
                 <img
                   src="https://ext.same-assets.com/2983890396/2120930438.png"
                   alt="MLS"
-                  className="h-10 w-auto"
+                  className="h-8 w-auto"
                 />
                 <img
                   src="https://ext.same-assets.com/2983890396/59346948.png"
                   alt="Realtor"
-                  className="h-10 w-auto"
+                  className="h-8 w-auto"
                 />
               </div>
             </div>
