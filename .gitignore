@@ -1,0 +1,15 @@
+# Root .gitignore for Vegas-Home-Value repository
+*.log
+.DS_Store
+.env*
+node_modules/
+coverage/
+test-output.log
+
+# Ignore everything in vegas-home-value from root, handled by subfolder .gitignore
+/vegas-home-value/node_modules/
+/vegas-home-value/.next/
+/vegas-home-value/.env*
+/vegas-home-value/coverage/
+/vegas-home-value/.vercel/
+/vegas-home-value/out/
